@@ -19,6 +19,12 @@
         --color-blanco: #FFFFFF;
         --color-enfoque: #fff4b8; 
     }
+   
+        a:focus, button:focus {
+            outline: 3px solid var(--color-enfoque) !important;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
 
     #boton-nav {
         background-color: var(--color-dorado-oscuro);

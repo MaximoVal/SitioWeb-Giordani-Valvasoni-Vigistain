@@ -27,6 +27,20 @@ if(isset($_POST['eliminaPromo'])){
     $_SESSION['baja_ok'] = "La promo fue eliminada correctamente.";
 }
 ?>
+<style>
+    :root {
+            --color-dorado-fondo: #eac764;
+            --color-dorado-btn: #DAB561;
+            --color-verde-login: #315c3d;
+            --color-foco: #fff4b8; 
+        }
+        a:focus, button:focus {
+            outline: 3px solid var(--color-foco) !important;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+    
+</style>
 <div class="form-container mb-4">
     <div class="form-header">
         <h2>Crear Promoción</h2>

@@ -1,3 +1,16 @@
+<style>
+     :root {
+            --color-dorado-fondo: #eac764;
+            --color-dorado-btn: #DAB561;
+            --color-verde-login: #315c3d;
+            --color-foco: #fff4b8; 
+        }
+        a:focus, button:focus {
+            outline: 3px solid var(--color-foco) !important;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+</style>
 <footer class="footer-custom" style="background-color: #355B38; color: white; padding: 40px 0; margin-top: 10rem;">
     <div class="container">
         <div class="row">
@@ -8,11 +21,6 @@
                 <p class="mb-2"><i class="bi bi-geo-alt-fill"></i> Mitre 650, Rosario</p>
                 <p class="mb-2"><i class="bi bi-telephone-fill"></i> (341) 456-7890</p>
                 <p class="mb-2"><i class="bi bi-envelope-fill"></i> info@paseodelafortuna.com</p>
-                <div class="mt-3">
-                    <a href="#" class="text-white me-3"><i class="bi bi-facebook" style="font-size: 1.5rem;"></i></a>
-                    <a href="#" class="text-white me-3"><i class="bi bi-instagram" style="font-size: 1.5rem;"></i></a>
-                    <a href="#" class="text-white"><i class="bi bi-twitter" style="font-size: 1.5rem;"></i></a>
-                </div>
             </div>
 
             <!-- Columna 2: Mapa ubuicacion -->

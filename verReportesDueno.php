@@ -178,6 +178,17 @@ function contarSolicitudes($codPromo, $estado = null){
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <style>
+     :root {
+            --color-dorado-fondo: #eac764;
+            --color-dorado-btn: #DAB561;
+            --color-verde-login: #315c3d;
+            --color-foco: #fff4b8; 
+        }
+        a:focus, button:focus {
+            outline: 3px solid var(--color-foco) !important;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
     .badge-aprobada { background-color: #28a745; }
     .badge-pendiente { background-color: #ff7707ff; color: #000; }
     .badge-rechazada { background-color: #dc3545; }

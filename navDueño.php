@@ -15,16 +15,17 @@ if(mysqli_num_rows($res) > 0){
         <link rel="stylesheet" href="../Estilos/estilos.css">
     </head>
     <style>
-        *
-        {
-            user-select:none;
-        }
         :root {
-                --color-dorado: #EED284;
-                --color-dorado-oscuro: #DAB561;
-                --color-negro: #333333;
-                --color-blanco: #FFFFFF;
-            }
+            --color-dorado-fondo: #eac764;
+            --color-dorado-btn: #DAB561;
+            --color-verde-login: #315c3d;
+            --color-foco: #fff4b8; 
+        }
+        a:focus, button:focus {
+            outline: 3px solid var(--color-foco) !important;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
         #boton-nav{
                 background-color: #DAB561;
                 transition: transform 0.2s ease, background-color 0.2s ease;

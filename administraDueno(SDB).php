@@ -45,6 +45,12 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
             --color-blanco: #FFFFFF;
             --color-verde: #355B38;
         }
+       
+        a:focus, button:focus {
+            outline: 3px solid var(--color-dorado-foco) !important;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
 
         body {
             color: var(--color-negro);

@@ -35,6 +35,12 @@
             --color-dorado-oscuro: #DAB561;
             --color-negro: #333333;
             --color-blanco: #FFFFFF;
+            --color-foco: #fff4b8; 
+        }
+        a:focus, button:focus {
+            outline: 3px solid var(--color-foco) !important;
+            outline-offset: 2px;
+            border-radius: 4px;
         }
         .btn-primary {
             background: linear-gradient(135deg, var(--color-dorado) 0%, var(--color-dorado-oscuro) 100%);

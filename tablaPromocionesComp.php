@@ -210,7 +210,13 @@ if(isset($_POST['solicitarPromo'])){
         --color-blanco: #FFFFFF;
         --color-verde: #355B38;
         --color-gris: #666666;
-    }
+        --color-foco: #fff4b8; 
+        }
+        a:focus, button:focus {
+            outline: 3px solid var(--color-foco) !important;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
 
 
     .skip-link {

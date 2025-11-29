@@ -138,6 +138,17 @@ $totalSolicitudes = mysqli_num_rows(consultaSQL("SELECT * FROM uso_promociones")
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <style>
+     :root {
+            --color-dorado-fondo: #eac764;
+            --color-dorado-btn: #DAB561;
+            --color-verde-login: #315c3d;
+            --color-foco: #fff4b8; 
+        }
+        a:focus, button:focus {
+            outline: 3px solid var(--color-foco) !important;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
     .promo-card {
         border-left: 4px solid var(--color-dorado);
         margin-bottom: 20px;

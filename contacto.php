@@ -48,6 +48,19 @@ if(isset($_POST["enviar"])){
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
+<style>
+    :root {
+            --color-dorado-fondo: #eac764;
+            --color-dorado-btn: #DAB561;
+            --color-verde-login: #315c3d;
+            --color-foco: #fff4b8; 
+        }
+        a:focus, button:focus {
+            outline: 3px solid var(--color-foco) !important;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+    </style>
 
 <body  style="background-image: url('../Footage/Galeria2.png');background-repeat:no-repeat;background-size: cover;">
     <?php 
@@ -55,7 +68,7 @@ if(isset($_POST["enviar"])){
             include 'navNoRegistrado.php';
         } else if($_SESSION['tipoUsuario'] == 'cliente') {
             include 'navCliente.php';  
-        } else if($_SESSION['tipoUsuario'] == 'dueño de local') {
+        } else if($_SESSION['tipoUsuario'] == 'dueno de local') {
             include 'navDueño.php';  
         } else {
             include 'navAdmin.php';  
