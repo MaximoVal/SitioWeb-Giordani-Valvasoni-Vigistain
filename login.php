@@ -4,57 +4,64 @@
     $mensaje = "";
     $errores = [];
 
-if(isset($_POST['enviar'])){
+    if(isset($_POST['enviar'])){
 
-    if(empty($_POST['email'])){
-        $errores[] = "El correo electrónico es obligatorio";
-    }
-    
-    if(empty($_POST['contraseña'])){
-        $errores[] = "La contraseña es obligatoria";
-    }
-
-    if(!empty($_POST['email']) && !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
-        $errores[] = "El formato del correo electrónico no es válido";
-    }
-    
-    
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-    $password = trim($_POST['contraseña']);
-
-    if(empty($errores)){
+        if(empty($_POST['email'])){
+            $errores[] = "El correo electrónico es obligatorio";
+        }
         
+        if(empty($_POST['contraseña'])){
+            $errores[] = "La contraseña es obligatoria";
+        }
 
-        $sql = "SELECT * FROM usuarios WHERE nombreUsuario='$email'";
-        $resultado = consultaSQL($sql);
+        if(!empty($_POST['email']) && !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
+            $errores[] = "El formato del correo electrónico no es válido";
+        }
+        
+        
+        $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        $password = trim($_POST['contraseña']);
 
-        if(mysqli_num_rows($resultado) > 0){
-       
-            $usuario = mysqli_fetch_assoc($resultado);
-     
-            $contraseñaProtegida = $usuario['contrasena'];
-            if(password_verify($password, $contraseñaProtegida)){
-                $_SESSION['usuario'] = $email;
-                $_SESSION['tipoUsuario'] = $usuario['tipoUsuario'];
+        if(empty($errores)){
+
+            $sql = "SELECT * FROM usuarios WHERE nombreUsuario='$email'";
+            $resultado = consultaSQL($sql);
+
+            if(mysqli_num_rows($resultado) > 0){
+           
+                $usuario = mysqli_fetch_assoc($resultado);
+         
+                $contraseñaProtegida = $usuario['contrasena'];
                 
-                // Redirigir a la página original si existe
-                if(isset($_SESSION['redirect_after_login'])){
-                    $redirect = $_SESSION['redirect_after_login'];
-                    unset($_SESSION['redirect_after_login']);
-                    header("Location: $redirect");
-                    exit();
+                if(password_verify($password, $contraseñaProtegida)){
+                    
+                    if($usuario['verificado'] == 1){
+                        
+                        $_SESSION['usuario'] = $email;
+                        $_SESSION['tipoUsuario'] = $usuario['tipoUsuario'];
+                        
+                        if(isset($_SESSION['redirect_after_login'])){
+                            $redirect = $_SESSION['redirect_after_login'];
+                            unset($_SESSION['redirect_after_login']);
+                            header("Location: $redirect");
+                            exit();
+                        } else {
+                            header("Location: index.php");
+                            exit();
+                        }
+
+                    } else {
+                        $errores[] = "Tu cuenta aún no ha sido verificada. Por favor revisa tu correo electrónico para activarla.";
+                    }
+
                 } else {
-                    header("Location: index.php");
-                    exit();
+                    $errores[] = "Contraseña incorrecta";
                 }
             } else {
-                $errores[] = "Contraseña incorrecta";
+                $errores[] = "Usuario no registrado, por favor regístrese";
             }
-        } else {
-            $errores[] = "Usuario no registrado, por favor regístrese";
         }
     }
-}
 ?>
 
 <!DOCTYPE html>
@@ -105,6 +112,23 @@ if(isset($_POST['enviar'])){
         .form-control.is-valid {
             border-color: #198754;
         }
+        .password-wrapper {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+            border: none;
+            background: none;
+            padding: 5px;
+        }
+        .toggle-password:hover {
+            color: #315c3d;
+        }
     </style>
 </head>
 
@@ -143,7 +167,7 @@ if(isset($_POST['enviar'])){
                             Correo Electrónico
                         </label>
                         <input type="email" class="form-control" id="email" name="email" 
-                               placeholder="tu@email.com" required>
+                               placeholder="tu@email.com" required value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>">
                         <div class="error-message" id="emailError">
                             <i class="fas fa-exclamation-circle"></i>
                             <span id="emailErrorText"></span>
@@ -156,13 +180,19 @@ if(isset($_POST['enviar'])){
                             <i class="fas fa-lock me-1"></i>
                             Contraseña
                         </label>
-                        <input type="password" class="form-control" id="password" 
-                               name="contraseña" placeholder="Tu contraseña" required>
+                        <div class="password-wrapper">
+                            <input type="password" class="form-control" id="password" 
+                                   name="contraseña" placeholder="Tu contraseña" required style="padding-right: 40px;">
+                            <button type="button" class="toggle-password" onclick="togglePassword()" aria-label="Mostrar u ocultar contraseña">
+                                <i class="fas fa-eye" id="toggleIcon"></i>
+                            </button>
+                        </div>
                         <div class="error-message" id="passwordError">
                             <i class="fas fa-exclamation-circle"></i>
                             <span id="passwordErrorText"></span>
                         </div>
                     </div>
+                    <a href='recuperar.php'>¿Olvidaste tu contraseña?</a>
 
                     <button type="submit" class="btn btn-primary w-100 mb-3" name="enviar">
                         <i class="fas fa-sign-in-alt me-2"></i>
@@ -191,23 +221,24 @@ if(isset($_POST['enviar'])){
     endif; 
     ?>
 
-
-    <?php if(isset($_SESSION['mensaje_warning'])): ?>
-    <script>
-    Swal.fire({
-        icon: 'warning',
-        title: 'Acceso restringido',
-        text: '<?php echo $_SESSION['mensaje_warning']; ?>',
-        confirmButtonColor: '#DAB561',
-        confirmButtonText: 'Entendido'
-    });
-    </script>
-    <?php 
-        unset($_SESSION['mensaje_warning']); 
-    endif; 
-    ?>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>

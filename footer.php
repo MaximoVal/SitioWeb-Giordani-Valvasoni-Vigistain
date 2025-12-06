@@ -55,11 +55,11 @@
                     if (isset($_SESSION['tipoUsuario'])) {
                         if ($_SESSION['tipoUsuario'] === 'cliente') {
                             echo '<li class="mb-2"><a href="cuentaUsuario.php" class="text-white text-decoration-none">👤 Mi Cuenta</a></li>';
-                        } elseif ($_SESSION['tipoUsuario'] === 'dueño de local') {
-                            echo '<li class="mb-2"><a href="cuentaDueño.php" class="text-white text-decoration-none">👤 Mi Cuenta</a></li>';
+                        } elseif ($_SESSION['tipoUsuario'] === 'dueno de local') {
+                            echo '<li class="mb-2"><a href="cuentaDueno.php" class="text-white text-decoration-none">👤 Mi Cuenta</a></li>';
                         }
-                        else{
-                            echo '<li class="mb-2"><a href="duenosAdmin(SDB).php" class="text-white text-decoration-none">👤 Panel de Administración</a></li>';
+                        elseif ($_SESSION['tipoUsuario'] === 'administrador') {
+                            echo '<li class="mb-2"><a href="duenosAdmin.php" class="text-white text-decoration-none">👤 Panel de Administración</a></li>';
                         }
                     }
                     else {

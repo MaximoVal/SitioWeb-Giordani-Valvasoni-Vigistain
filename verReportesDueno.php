@@ -97,6 +97,7 @@ if(isset($local['codLocal'])){
             width: 16px;
             height: 16px;
         }
+        
     </style>
     <div class="alert-container d-flex flex-column justify-content-center align-items-start mx-auto mt-5">
         <div class="alert-header">
@@ -117,7 +118,7 @@ if(isset($local['codLocal'])){
     exit();
 }
 
-$porPagina = 10;
+$porPagina = 4;
 $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
 if ($pagina < 1) $pagina = 1;
 $offset = ($pagina - 1) * $porPagina;
@@ -165,19 +166,14 @@ function contarSolicitudes($codPromo, $estado = null){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Promociones - <?php echo $nombreLocal; ?></title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Bootstrap Icons -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    
-    <!-- Estilos personalizados -->
+
     <link rel="stylesheet" href="../Estilos/estilos.css">
     
-    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<style>
+    <style>
      :root {
             --color-dorado-fondo: #eac764;
             --color-dorado-btn: #DAB561;
@@ -223,8 +219,42 @@ function contarSolicitudes($codPromo, $estado = null){
     
     color: #ff7707ff !important;
 }
+.page-item.disabled .page-link {
+        background-color: #e9ecef;
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+     .page-item.active .page-link {
+        background-color: var(--color-dorado-oscuro);
+        border-color: var(--color-dorado-oscuro);
+        color: #000;
+        font-weight: bold;
+    }
 
+    .page-link {
+        color: var(--color-negro);
+        font-weight: 500;
+    }
+
+    .page-link:hover,
+    .page-link:focus {
+        background-color: var(--color-dorado);
+        color: #000;
+        border-color: var(--color-dorado-oscuro);
+    }
+    .btn-mobile-nav {
+            background-color: var(--color-dorado);
+            color: var(--color-negro);
+            font-weight: 700;
+            border: 1px solid var(--color-dorado-oscuro);
+        }
+        .btn-mobile-nav:hover, .btn-mobile-nav:focus {
+            background-color: var(--color-dorado-oscuro);
+            color: var(--color-negro);
+        }
 </style>
+</head>
+
 <body class="d-flex flex-column min-vh-100">
 
 
@@ -287,7 +317,7 @@ function contarSolicitudes($codPromo, $estado = null){
             <div class="col-md-3 mb-3">
                 <div class="card stat-card">
                     <div class="card-body">
-                        <h6 class="text-muted">Solicitudes Pendientes</h6>
+                        <h6 class="text-muted">Solicitudes Clientes Pendientes</h6>
                         <h3 class="mb-0 text-info"><?php echo $solicitudesPendientes; ?></h3>
                     </div>
                 </div>
@@ -324,8 +354,6 @@ function contarSolicitudes($codPromo, $estado = null){
                                         $solicitudesEnviadas = contarSolicitudes($promo['codPromo'], 'enviada');
                                         $solicitudesAceptadas = contarSolicitudes($promo['codPromo'], 'aceptada');
                                         $solicitudesTotal = contarSolicitudes($promo['codPromo']);
-                                        
-                                        // Determinar si está vencida
                                         $vencida = ($promo['fechaHastaPromo'] < $hoy);
                                     ?>
                                     <tr>
@@ -403,25 +431,25 @@ function contarSolicitudes($codPromo, $estado = null){
                         </div>
 
                         <!-- Paginación -->
-                        <?php if($totalPaginas > 1): ?>
+                        <?php if($totalPaginas > 0): ?>
                         <nav aria-label="Paginación" class="mt-4">
                             <ul class="pagination justify-content-center">
                                 <li class="page-item <?php echo ($pagina <= 1) ? 'disabled' : ''; ?>">
-                                    <a class="page-link" href="?pagina=<?php echo max(1, $pagina - 1); ?><?php echo isset($_GET['estado']) ? '&estado='.$_GET['estado'] : ''; ?>">
+                                    <a class="page-link" href="?accion=verReportes&pagina=<?php echo max(1, $pagina - 1); ?><?php echo isset($_GET['estado']) ? '&estado='.$_GET['estado'] : ''; ?>">
                                         Anterior
                                     </a>
                                 </li>
 
                                 <?php for($i = 1; $i <= $totalPaginas; $i++): ?>
                                 <li class="page-item <?php echo ($i == $pagina) ? 'active' : ''; ?>">
-                                    <a class="page-link" href="?pagina=<?php echo $i; ?><?php echo isset($_GET['estado']) ? '&estado='.$_GET['estado'] : ''; ?>">
+                                    <a class="page-link" href="?accion=verReportes&pagina=<?php echo $i; ?><?php echo isset($_GET['estado']) ? '&estado='.$_GET['estado'] : ''; ?>">
                                         <?php echo $i; ?>
                                     </a>
                                 </li>
                                 <?php endfor; ?>
 
                                 <li class="page-item <?php echo ($pagina >= $totalPaginas) ? 'disabled' : ''; ?>">
-                                    <a class="page-link" href="?pagina=<?php echo min($totalPaginas, $pagina + 1); ?><?php echo isset($_GET['estado']) ? '&estado='.$_GET['estado'] : ''; ?>">
+                                    <a class="page-link" href="?accion=verReportes&pagina=<?php echo min($totalPaginas, $pagina + 1); ?><?php echo isset($_GET['estado']) ? '&estado='.$_GET['estado'] : ''; ?>">
                                         Siguiente
                                     </a>
                                 </li>

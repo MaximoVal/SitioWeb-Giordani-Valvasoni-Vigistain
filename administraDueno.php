@@ -1,6 +1,7 @@
 <?php
 session_start();
-include('funciones.php');
+include_once('funciones.php');
+
 $hoy= date('Y-m-d');
 $tresSemanas = date('Y-m-d', strtotime('+21 days'));
 $emailUsu=$_SESSION['usuario'];
@@ -26,7 +27,7 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración - Dueño</title>
+    <title>Administración - Dueño</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
@@ -36,7 +37,6 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
     <link rel="stylesheet" href="../Estilos/usuarioCuentaEstilos.css">
 
     <style>
-
         :root {
             --color-dorado: #EED284;
             --color-dorado-oscuro: #DAB561;
@@ -45,7 +45,7 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
             --color-blanco: #FFFFFF;
             --color-verde: #355B38;
         }
-       
+        
         a:focus, button:focus {
             outline: 3px solid var(--color-dorado-foco) !important;
             outline-offset: 2px;
@@ -61,7 +61,6 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
             outline-offset: 2px;
             border-radius: 4px;
         }
-
 
         .bg-dorado { background-color: var(--color-dorado); }
         .text-verde { color: var(--color-verde); }
@@ -83,6 +82,7 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
             border-left: 5px solid var(--color-dorado);
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow: hidden; 
         }
 
         .nav-link-admin {
@@ -99,7 +99,6 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
             color: var(--color-negro);
         }
 
-
         .nav-link-admin.active {
             background-color: var(--color-dorado);
             color: var(--color-negro);
@@ -113,6 +112,7 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
             border: 1px solid rgba(0,0,0,0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             height: 100%;
+            overflow: hidden; 
         }
         .dashboard-card:hover {
             transform: translateY(-5px);
@@ -124,25 +124,37 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
             color: var(--color-verde); 
             font-size: 2.5rem;
         }
-        
 
         .text-label {
             font-weight: 700;
             color: var(--color-verde); 
             font-size: 0.9rem;
         }
+
+
+        .text-break-nice {
+            word-break: break-word; 
+            overflow-wrap: break-word;
+        }
+
+        .card-body {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        @media (max-width: 768px) {
+            .h5, h5 { font-size: 1.1rem; }
+        }
     </style>
 </head>
 <body>
 
-    <?php include('navDueño.php'); ?>
+    <?php include('navDueno.php'); ?>
 
     <main class="container-fluid my-4">
         <div class="row">
-            
-            <aside class="col-md-3 col-lg-2 mb-4" aria-label="Menú lateral de administración">
-                
-                <div class="d-md-none mb-3 mt-3 d-flex flex-wrap gap-2">
+            <aside class="col-12 col-md-12 col-lg-3 mb-4" aria-label="Menú lateral de administración">
+                <div class="mb-3 mt-3 d-flex flex-wrap gap-2 d-lg-none">
                     <?php if(isset($accion)){ ?>
                     <button class="btn btn-mobile-nav flex-fill d-flex align-items-center justify-content-center gap-2 py-2" 
                             type="button" 
@@ -175,34 +187,41 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
                         <span>Dueño</span>
                     </button>
                 </div>
-
                 <?php if(isset($accion)){ ?>
-                <nav class="sidebar-box mb-3 p-3 collapse d-md-block" id="panelAdmin">
+               <nav class="sidebar-box mb-3 p-3 collapse d-lg-block" id="panelAdmin">
                     <h2 class="h5 mb-3 d-flex align-items-center text-negro fw-bold">
                         <i class="bi bi-gear-fill me-2 text-verde" aria-hidden="true"></i>
                         Administración
                     </h2>
                     <ul class="list-unstyled m-0">
+
                         <li class="mb-2">
-                            <a href="administraDueno(SDB).php?accion=adminPromos" 
+                            <a href="administraDueno.php?accion=adminPromos" 
                                class="text-decoration-none d-flex align-items-center py-2 px-3 rounded-2 nav-link-admin <?php echo ($accion == 'adminPromos') ? 'active' : ''; ?>"
-                               <?php echo ($accion == 'adminPromos') ? 'aria-current="page"' : ''; ?>>
+                               <?php echo ($accion == 'adminPromos') ? 'aria-current="page"' : ''; ?>
+                               aria-label="Administrar Promociones. Ir al panel para crear y editar ofertas.">
+
                                 <i class="bi bi-tag-fill me-2" aria-hidden="true"></i>
                                 Administrar Promociones
                             </a>
                         </li>
+
                         <li class="mb-2">
-                            <a href="administraDueno(SDB).php?accion=verSolicitudesDueno" 
-                               class="text-decoration-none d-flex align-items-center py-2 px-3 rounded-2 nav-link-admin <?php echo ($accion == 'verSolicitudesDueno') ? 'active' : ''; ?>"
-                               <?php echo ($accion == 'verSolicitudesDueno') ? 'aria-current="page"' : ''; ?>>
+                            <a href="verSolicitudesDueno.php" 
+                               class="text-decoration-none d-flex align-items-center py-2 px-3 rounded-2 nav-link-admin"
+                               aria-label="Solicitudes. Ver listado de clientes que pidieron código.">
+
                                 <i class="bi bi-check-square me-2" aria-hidden="true"></i>
                                 Solicitudes
                             </a>
                         </li>
-                        <li>
-                            <a href="administraDueno(SDB).php?accion=verReportes" 
+
+                        <li class="mb-2">
+                            <a href="administraDueno.php?accion=verReportes" 
                                class="text-decoration-none d-flex align-items-center py-2 px-3 rounded-2 nav-link-admin <?php echo ($accion == 'verReportes') ? 'active' : ''; ?>"
-                               <?php echo ($accion == 'verReportes') ? 'aria-current="page"' : ''; ?>>
+                               <?php echo ($accion == 'verReportes') ? 'aria-current="page"' : ''; ?>
+                               aria-label="Reportes. Consultar estadísticas y métricas del local.">
+
                                 <i class="bi bi-file-earmark-bar-graph me-2" aria-hidden="true"></i>
                                 Reportes
                             </a>
@@ -211,7 +230,7 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
                 </nav>
                 <?php } ?>
                 
-                <section class="sidebar-box p-3 mb-3 collapse d-md-block" id="infoLocal" aria-labelledby="headingLocal">
+                <section class="sidebar-box p-3 mb-3 collapse d-lg-block" id="infoLocal" aria-labelledby="headingLocal">
                     <h2 class="h5 mb-3 d-flex align-items-center text-negro fw-bold" id="headingLocal">
                         <i class="bi bi-shop me-2 text-verde" aria-hidden="true"></i> 
                         Datos del Local
@@ -220,11 +239,11 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
                     <?php if($dueno['localNoLocal']!='no'){ ?>
                         <div class="mb-2">
                             <p class="mb-0 text-label">Código:</p>
-                            <p class="text-negro m-0"><?php echo $localDueno['codLocal']; ?></p>
+                            <p class="text-negro m-0 text-break-nice"><?php echo $localDueno['codLocal']; ?></p>
                         </div>
                         <div class="mb-2">
                             <p class="mb-0 text-label">Nombre:</p>
-                            <p class="text-negro m-0"><?php echo $localDueno['nombreLocal']; ?></p>
+                            <p class="text-negro m-0 text-break-nice"><?php echo $localDueno['nombreLocal']; ?></p>
                         </div>
                         <div class="mb-2">
                             <p class="mb-0 text-label">Sector:</p>
@@ -235,16 +254,14 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
                             <p class="text-negro m-0"><?php echo ucfirst($localDueno['categoriaLocal']); ?></p>
                         </div>
                     <?php } else { ?>
-                        <div class="alert alert-warning d-flex align-items-center" role="alert">
+                        <div class="alert alert-warning d-flex align-items-center mb-0 p-2 small" role="alert">
                             <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
-                            <div>
-                                <strong>Atención:</strong> No posee local registrado.
-                            </div>
+                            <div><strong>Atención:</strong> Sin local registrado.</div>
                         </div>
                     <?php } ?>
                 </section>
 
-                <section class="sidebar-box p-3 collapse d-md-block" id="infoDueno" aria-labelledby="headingDueno">
+                <section class="sidebar-box p-3 collapse d-lg-block" id="infoDueno" aria-labelledby="headingDueno">
                     <h2 class="h5 mb-3 d-flex align-items-center text-negro fw-bold" id="headingDueno">
                         <i class="bi bi-person-vcard me-2 text-verde" aria-hidden="true"></i> 
                         Datos del Dueño
@@ -255,16 +272,16 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
                     </div>
                     <div class="mb-2">
                         <p class="mb-0 text-label">Nombre completo:</p>
-                        <p class="text-negro m-0"><?php echo $dueno['nombre'] . ' ' . $dueno['apellido']; ?></p>
+                        <p class="text-negro m-0 text-break-nice"><?php echo $dueno['nombre'] . ' ' . $dueno['apellido']; ?></p>
                     </div>
                     <div>
                         <p class="mb-0 text-label">Email:</p>
-                        <p class="text-negro m-0" style="word-break: break-all;"><?php echo $dueno['nombreUsuario']; ?></p>
+                        <!-- Usamos la clase personalizada text-break-nice -->
+                        <p class="text-negro m-0 text-break-nice"><?php echo $dueno['nombreUsuario']; ?></p>
                     </div>
                 </section>
             </aside>
-
-            <section class="col-md-9 col-lg-10" role="main">
+            <section class="col-12 col-md-12 col-lg-9">
                 <?php if(isset($accion)){
 
                     if($accion=='adminPromos' && file_exists('administrarPromocionesDueno.php')){
@@ -286,8 +303,8 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
                     </div>
                     
                     <div class="row g-4">
-                        <div class="col-md-4">
-                            <a href="administraDueno(SDB).php?accion=adminPromos" class="text-decoration-none h-100 d-block group">
+                        <div class="col-sm-6 col-lg-4">
+                            <a href="administraDueno.php?accion=adminPromos" class="text-decoration-none h-100 d-block group">
                                 <article class="card dashboard-card h-100 bg-white">
                                     <div class="card-body text-center p-4">
                                         <i class="bi bi-tag-fill mb-3 card-icon" aria-hidden="true"></i>
@@ -299,8 +316,8 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
                             </a>
                         </div>
                         
-                        <div class="col-md-4">
-                            <a href="administraDueno(SDB).php?accion=verSolicitudesDueno" class="text-decoration-none h-100 d-block">
+                        <div class="col-sm-6 col-lg-4">
+                            <a href="verSolicitudesDueno.php" class="text-decoration-none h-100 d-block">
                                 <article class="card dashboard-card h-100 bg-white">
                                     <div class="card-body text-center p-4">
                                         <i class="bi bi-check-square mb-3 card-icon" aria-hidden="true"></i>
@@ -312,8 +329,8 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
                             </a>
                         </div>
                         
-                        <div class="col-md-4">
-                            <a href="administraDueno(SDB).php?accion=verReportes" class="text-decoration-none h-100 d-block">
+                        <div class="col-sm-6 col-lg-4">
+                            <a href="administraDueno.php?accion=verReportes" class="text-decoration-none h-100 d-block">
                                 <article class="card dashboard-card h-100 bg-white">
                                     <div class="card-body text-center p-4">
                                         <i class="bi bi-file-earmark-bar-graph mb-3 card-icon" aria-hidden="true"></i>
@@ -328,7 +345,6 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : null;
                 </div>
                 <?php } ?>
             </section>
-        </div>
     </main>
 
     <?php include 'footer.php'; ?>

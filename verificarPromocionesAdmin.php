@@ -50,7 +50,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && isset($_P
         $resultado = consultaSQL($sql);
         
         if($resultado){
-            $mensaje = "<div class='alert alert-success'>Promocion aceptado correctamente</div>";
+            $mensaje = "<div class='alert alert-success'>Promocion aceptada correctamente</div>";
         } else {
             $mensaje = "<div class='alert alert-danger'>Error al aceptar usuario</div>";
         }
@@ -60,7 +60,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && isset($_P
         $resultado = consultaSQL($sql);
         
         if($resultado){
-            $mensaje = "<div class='alert alert-warning'>Promocion rechazado correctamente</div>";
+            $mensaje = "<div class='alert alert-warning'>Promocion rechazada correctamente</div>";
         } else {
             $mensaje = "<div class='alert alert-danger'>Error al rechazar usuario</div>";
         }
@@ -72,8 +72,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && isset($_P
 <html>
 <head>
     <title>Promociones Pendientes</title>
-  
-</head>
     <style>
          :root {
             --color-dorado-fondo: #eac764;
@@ -88,6 +86,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && isset($_P
         }
     </style>
 <body>
+  
+</head>
+    
     <div class="container mt-4">
        
         

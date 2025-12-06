@@ -3,9 +3,7 @@
     include("funciones.php"); 
 
     $email = $_SESSION['usuario'];
-
- 
-    $sql = "SELECT nombre, apellido, nombreUsuario, contrasena FROM usuarios WHERE nombreUsuario='$email'";
+    $sql = "SELECT nombre, apellido, nombreUsuario, contrasena, categoriaCliente, cantPromoUsada FROM usuarios WHERE nombreUsuario='$email'";
     $resultado = consultaSQL($sql);
 
     if($resultado && mysqli_num_rows($resultado) > 0){
@@ -15,55 +13,86 @@
         exit();
     }
 
-
     $mensaje = "";
-
+    $tipoAlerta = ""; 
     if(isset($_POST['enviar-cambios'])){
 
         $nombre = !empty($_POST['nombre']) ? $_POST['nombre'] : $usuario['nombre'];
         $apellido = !empty($_POST['apellido']) ? $_POST['apellido'] : $usuario['apellido'];
         $emailNuevo = !empty($_POST['email']) ? $_POST['email'] : $usuario['nombreUsuario'];
 
-        $contraseñaActual = $_POST['contraseña-actual'] ?? '';
-        $contraseñaNueva = $_POST['contraseña-nueva'] ?? '';
+        $contrasenaActual = $_POST['contrasena-actual'] ?? '';
+        $contrasenaNueva = $_POST['contrasena-nueva'] ?? '';
 
-   
-        if(!empty($contraseñaNueva)){
-            $contraseñaProtegida = $usuario['contraseña'];
-            if(password_verify($contraseñaActual, $contraseñaProtegida)){
-                $contraseñaNueva= password_hash($contraseñaNueva, PASSWORD_DEFAULT);
+ 
+        if(!empty($contrasenaNueva)){
+            
        
-                $sqlActualizar = "UPDATE usuarios 
-                                SET nombre='$nombre', apellido='$apellido', nombreUsuario='$emailNuevo', contraseña='$contraseñaNueva' 
-                                WHERE nombreUsuario='$email'";
-                consultaSQL($sqlActualizar);
-                $mensaje = "Datos y contraseña actualizados correctamente.";
-            } else {
+            if (strlen($contrasenaNueva) < 8) {
+                $mensaje = "La contraseña debe tener al menos 8 caracteres.";
+                $tipoAlerta = "danger";
+            }
+  
+            elseif (!preg_match('/[A-Z]/', $contrasenaNueva)) {
+                $mensaje = "La contraseña debe contener al menos una letra mayúscula.";
+                $tipoAlerta = "danger";
+            }
+            
+            else {
+             
+                $contrasenaProtegida = $usuario['contrasena']; 
                 
-                $mensaje = "Contraseña actual incorrecta. No se actualizó la contraseña.";
-                
-                $sqlActualizar = "UPDATE usuarios 
-                                SET nombre='$nombre', apellido='$apellido', nombreUsuario='$emailNuevo' 
-                                WHERE nombreUsuario='$email'";
-                consultaSQL($sqlActualizar);
+                if(password_verify($contrasenaActual, $contrasenaProtegida)){
+     
+                    $contrasenaNuevaHash = password_hash($contrasenaNueva, PASSWORD_DEFAULT);
+           
+                    $sqlActualizar = "UPDATE usuarios 
+                                    SET nombre='$nombre', apellido='$apellido', nombreUsuario='$emailNuevo', contrasena='$contrasenaNuevaHash' 
+                                    WHERE nombreUsuario='$email'";
+                    consultaSQL($sqlActualizar);
+                    
+                    $mensaje = "¡Datos y contraseña actualizados correctamente!";
+                    $tipoAlerta = "success";
+                    
+                    $_SESSION['usuario'] = $emailNuevo;
+                    $usuario['nombre'] = $nombre;
+                    $usuario['apellido'] = $apellido;
+                    $usuario['nombreUsuario'] = $emailNuevo;
+
+                } else {
+                    $mensaje = "La contraseña actual es incorrecta. Solo se actualizaron los datos de perfil.";
+                    $tipoAlerta = "warning";
+                    
+      
+                    $sqlActualizar = "UPDATE usuarios 
+                                    SET nombre='$nombre', apellido='$apellido', nombreUsuario='$emailNuevo' 
+                                    WHERE nombreUsuario='$email'";
+                    consultaSQL($sqlActualizar);
+                    
+                    $_SESSION['usuario'] = $emailNuevo;
+                    $usuario['nombre'] = $nombre;
+                    $usuario['apellido'] = $apellido;
+                    $usuario['nombreUsuario'] = $emailNuevo;
+                }
             }
         } else {
- 
+
             $sqlActualizar = "UPDATE usuarios 
                             SET nombre='$nombre', apellido='$apellido', nombreUsuario='$emailNuevo' 
                             WHERE nombreUsuario='$email'";
             consultaSQL($sqlActualizar);
-            $mensaje = "Datos actualizados correctamente.";
+            
+            $mensaje = "Datos de perfil actualizados correctamente.";
+            $tipoAlerta = "success";
+
+            $_SESSION['usuario'] = $emailNuevo;
+            $usuario['nombre'] = $nombre;
+            $usuario['apellido'] = $apellido;
+            $usuario['nombreUsuario'] = $emailNuevo;
         }
-
-
-        $_SESSION['usuario'] = $emailNuevo;
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
     }
 
     if(isset($_POST['cerrar-sesion'])){
-        
         header("Location: cerrar_sesion.php");
         exit();
     }
@@ -76,12 +105,10 @@
         exit();
     }
 
-    $emali=$_SESSION['usuario'];
-    $medium=3;
-    $premium=6;
-    $consulta="SELECT * FROM usuarios WHERE nombreUsuario='$emali'";
-     $resultado=consultaSQL($consulta);
-    $fila=mysqli_fetch_assoc($resultado);
+
+    $cantidadUsada = $usuario['cantPromoUsada'];
+    $medium = 3;
+    $premium = 6;
    
 ?>
 
@@ -97,10 +124,7 @@
 
     <link rel="stylesheet" href="../Estilos/estilos.css">
     <link rel="stylesheet" href="../Estilos/usuarioCuentaEstilos.css">
-
-    
-</head>
-<style>
+    <style>
     :root {
             --color-dorado-fondo: #eac764;
             --color-dorado-btn: #DAB561;
@@ -112,20 +136,39 @@
             outline-offset: 2px;
             border-radius: 4px;
         }
+    .list-group-item {
+        border: none;
+        border-bottom: 1px solid #eee;
+        padding: 15px 20px;
+        color: #555;
+        font-weight: 500;
+        background-color:var(--color-dorado)
+
+    }
+
+    .list-group-item:hover {
+        background-color: #f8f9fa !important;
+    }
+
+    .list-group-item.active {
+        background-color: var(--color-dorado-oscuro) !important;
+        border-color: var(--color-dorado-oscuro)!important;
+        color: white;
+    }
     </style>
+</head>
+
 <body>
     <?php
         include 'navCliente.php';
     ?>
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <h1>Panel de Administración</h1>
             <p>Gestiona tu cuenta y configuración personal</p>
         </div>
 
         <div class="main-content">
-            <!-- Sidebar -->
             <div class="sidebar">
                 <div class="user-info">
                     <h3>
@@ -135,28 +178,50 @@
                     </h3>
                     <p><?php echo ($usuario['nombreUsuario'])?></p>
                 </div>
-            </div>
+                <div class="card sidebar-links">
+            <div class=" d-flex flex-column justify-content-start">
+                <button class="btn btn-primary w-100 d-md-none mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenu" aria-expanded="false" aria-controls="adminMenu">
+                    <i class="bi bi-menu-button-wide me-2"></i>Panel administrador
+                </button>
 
-            <!-- Content Area -->
+                <div class="collapse d-md-block" id="adminMenu">
+                    <div class="list-group">
+                        <a href="cuentaUsuario.php" class="list-group-item list-group-item-action active">Administrar datos personales</a>
+                        <a href="verPromocionesCliente.php" class="list-group-item list-group-item-action ">Ver promociones</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+            
+
             <div class="content-area">
                 <h2 class="section-title">Información Personal</h2>
+
+                <?php if(!empty($mensaje)): ?>
+                    <div class="alert alert-<?php echo $tipoAlerta; ?> alert-dismissible fade show" role="alert">
+                        <?php 
+                            // Icono según el tipo de mensaje
+                            if($tipoAlerta == 'success') echo '<i class="bi bi-check-circle-fill me-2"></i>';
+                            if($tipoAlerta == 'danger') echo '<i class="bi bi-exclamation-triangle-fill me-2"></i>';
+                            if($tipoAlerta == 'warning') echo '<i class="bi bi-exclamation-circle-fill me-2"></i>';
+                            echo $mensaje; 
+                        ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
                 
-                <!-- Stats -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-number">
-                            <?php
-                                $cantidadUsada=$fila['cantPromoUsada'];
-                                echo $cantidadUsada;    
-                            ?>
+                            <?php echo $cantidadUsada; ?>
                         </div>
                         <div>Promociones usadas</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number">
-                            <?php
-                            
-                                $categoriaActual = $fila['categoriaCliente'];
+                            <?php 
+                                $categoriaActual = $usuario['categoriaCliente'];
                                 $categoriaActual = ucfirst($categoriaActual); 
                                 echo $categoriaActual;
                             ?>
@@ -171,16 +236,15 @@
                                 } elseif($categoriaActual == 'Medium'){
                                     $promocionesFaltantes = $premium - $cantidadUsada;
                                 } else {
-                                    $promocionesFaltantes = "Rango maximo "; // Ya es premium
+                                    $promocionesFaltantes = "MAX"; 
                                 }
                                 echo $promocionesFaltantes;
                             ?>
                         </div>
-                        <div>Promociones para mejorar categoria</div>
+                        <div>Promos para nivel</div>
                     </div>
                 </div>
 
-                <!-- Profile Form -->
                 <form action="" method="POST" class="profile-form">
                     <div class="form-row">
                         <div class="form-group">
@@ -206,26 +270,27 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="password-actual">Contraseña Actual</label>
-                                <input type="password" id="password-actual" placeholder="Ingresa tu contraseña actual" name="contraseña-actual">
+                                <input type="password" id="password-actual" placeholder="Ingresa tu contraseña actual" name="contrasena-actual">
                             </div>
                             <div class="form-group">
                                 <label for="password-nueva">Nueva Contraseña</label>
-                                <input type="password" id="password-nueva" placeholder="Ingrese la nueva contraseña" name="contraseña-nueva">
+                                <input type="password" id="password-nueva" placeholder="Mínimo 8 caracteres y 1 mayúscula" name="contrasena-nueva">
                             </div>
                         </div>
                     </div>
-                    <!-- Form Actions -->
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary" name="enviar-cambios">Guardar Cambios</button>
-                        <a href="cerrar_sesion.php" class="btn btn-secondary">Cerrar Sesion</a>
+                        
+                        <button type="submit" class="btn btn-secondary" name="cerrar-sesion">Cerrar Sesión</button>
 
-                        <button type="button" class="btn btn-danger" style="margin-left: auto;" name="eliminar-cuenta">Eliminar Cuenta</button>
+                        <button type="submit" class="btn btn-danger" style="margin-left: auto;" name="eliminar-cuenta" onclick="return confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.');">Eliminar Cuenta</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <!-- Footer -->
     <?php include 'footer.php'; ?>
+    
+
 </body>
 </html>

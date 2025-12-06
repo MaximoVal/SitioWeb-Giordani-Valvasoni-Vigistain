@@ -1,4 +1,6 @@
-
+<?php
+    session_start();
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -13,11 +15,10 @@
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="../Estilos/adiministraDuenoEstilos.css">
     <link rel="stylesheet" href="../Estilos/estilos.css">
-
+	 <link rel="icon" type="image/png" href="../Footage/iconoPagina.png" >
     <!-- Íconos -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-</head>
-<style>
+    <style>
      :root {
             --color-dorado-fondo: #eac764;
             --color-dorado-btn: #DAB561;
@@ -37,6 +38,8 @@
         }   
         
 </style>
+</head>
+
 <body >
     <!-- HEADER -->
     <?php include 'navAdmin.php'; ?>
@@ -58,7 +61,7 @@
                   
                         <div class="collapse d-md-block" id="adminMenu">
                             <div class="list-group">
-                                <a href="duenosAdmin(SDB).php" class="list-group-item list-group-item-action active">Administrar dueños</a>
+                                <a href="duenosAdmin.php" class="list-group-item list-group-item-action active">Administrar dueños</a>
                                 <a href="administraLocalAdmin.php" class="list-group-item list-group-item-action ">Administrar locales</a>
                                 <a href="administrarPromocionesAdmin.php" class="list-group-item list-group-item-action">Administrar promociones</a>
                                 <a href="creaLocalAdmin.php" class="list-group-item list-group-item-action">Crear local</a>
@@ -75,7 +78,7 @@
                     <h4 class="mb-4" style="color: var(--color-negro); font-weight:600;">Solicitudes de dueños</h4>
 
                     <?php
-                    include "verificarDueño.php";
+                    include "verificarDueno.php";
                     
                     ?>
                 </div>

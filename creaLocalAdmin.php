@@ -1,8 +1,4 @@
 <?php
-    ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
 include("funciones.php");
 $sql1 = "SELECT codUsuario, nombre, apellido FROM usuarios WHERE tipoUsuario='dueno de local' AND localNoLocal='no'";
@@ -40,8 +36,7 @@ if(isset($_POST['crear-local'])){
 
     <!-- Íconos -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-</head>
-<style>
+    <style>
     :root {
             --color-dorado-fondo: #eac764;
             --color-dorado-btn: #DAB561;
@@ -60,6 +55,8 @@ if(isset($_POST['crear-local'])){
             color: #000000 !important;
         }   
 </style>
+</head>
+
 <body>
 
 <?php include 'navAdmin.php'; ?>
@@ -81,7 +78,7 @@ if(isset($_POST['crear-local'])){
                        
                         <div class="collapse d-md-block" id="adminMenu">
                             <div class="list-group">
-                                <a href="duenosAdmin(SDB).php" class="list-group-item list-group-item-action">Administrar dueños</a>
+                                <a href="duenosAdmin.php" class="list-group-item list-group-item-action">Administrar dueños</a>
                                 <a href="administraLocalAdmin.php" class="list-group-item list-group-item-action ">Administrar locales</a>
                                 <a href="administrarPromocionesAdmin.php" class="list-group-item list-group-item-action">Administrar promociones</a>
                                 <a href="creaLocalAdmin.php" class="list-group-item list-group-item-action active">Crear local</a>

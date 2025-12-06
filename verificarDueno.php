@@ -1,8 +1,5 @@
 <?php
 include("funciones.php");
-
-
-
 function dueñosPendiente() {
     $sql = "SELECT codUsuario, nombre, apellido FROM usuarios WHERE pendiente = 'si'";
     

@@ -1,11 +1,6 @@
 <?php
- include_once "funciones.php";
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-
+include_once "funciones.php";
+session_start();
 if(isset($_POST['enviar'])) {
  
     $nombre = $_POST['nombre'];
@@ -42,8 +37,7 @@ if(isset($_POST['enviar'])) {
 
     <!-- Íconos -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-</head>
-<style>
+    <style>
     :root {
             --color-dorado-fondo: #eac764;
             --color-dorado-btn: #DAB561;
@@ -82,6 +76,8 @@ if(isset($_POST['enviar'])) {
     pointer-events: none;
 }   
 </style>
+</head>
+
 <body>
 
 <?php include 'navAdmin.php'; ?>
@@ -103,7 +99,7 @@ if(isset($_POST['enviar'])) {
                     
                         <div class="collapse d-md-block" id="adminMenu">
                             <div class="list-group">
-                                <a href="duenosAdmin(SDB).php" class="list-group-item list-group-item-action">Administrar dueños</a>
+                                <a href="duenosAdmin.php" class="list-group-item list-group-item-action">Administrar dueños</a>
                                 <a href="administraLocalAdmin.php" class="list-group-item list-group-item-action ">Administrar locales</a>
                                 <a href="administrarPromocionesAdmin.php" class="list-group-item list-group-item-action">Administrar promociones</a>
                                 <a href="creaLocalAdmin.php" class="list-group-item list-group-item-action">Crear local</a>
@@ -158,7 +154,7 @@ if(isset($_POST['enviar'])) {
                                 <label for="inicial">Inicial</label><br>
                                 
                                 <input type="radio" id="medium" name="tipoCliente" value="Medium">
-                                <label for="dueño">Medium</label><br> 
+                                <label for="dueno">Medium</label><br> 
                                 
                                 <input type="radio" id="premium" name="tipoCliente" value="Premium">
                                 <label for="administrador">Premium</label><br>

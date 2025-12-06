@@ -32,27 +32,26 @@ if(isset($resultadoCat)){
 
     $offset = ($pagina - 1) * $porPagina;
 
-    
     $filtroCategoria = '';
     if(!empty($categoria)){
         $filtroCategoria = " AND categoriaPromo='$categoria'";
     }
 
-  
     if($resultadoCat == 'Inicial'){
 
         $sqlCount = "SELECT COUNT(*) AS total 
-                    FROM promociones p
-                    WHERE p.estadoPromo='aprobada' 
-                    AND p.categoriaCliente='Inicial'
-                    AND p.fechaHastaPromo >= '$hoy'
-                    AND NOT EXISTS (
-                        SELECT 1 
-                        FROM uso_promociones up 
-                        WHERE up.codPromo = p.codPromo 
-                        AND up.codCliente = '$codCliente'
-                    )
-                    $filtroCategoria";
+                     FROM promociones p
+                     WHERE p.estadoPromo='aprobada' 
+                     AND p.categoriaCliente='Inicial'
+                     AND p.fechaHastaPromo >= '$hoy'
+                     AND p.fechaDesdePromo <= '$hoy' 
+                     AND NOT EXISTS (
+                         SELECT 1 
+                         FROM uso_promociones up 
+                         WHERE up.codPromo = p.codPromo 
+                         AND up.codCliente = '$codCliente'
+                     )
+                     $filtroCategoria";
 
         $resultCount = consultaSQL($sqlCount);
         $rowCount = mysqli_fetch_assoc($resultCount);
@@ -60,11 +59,12 @@ if(isset($resultadoCat)){
 
         $totalPaginas = max(1, ceil($total / $porPagina));
 
-        $sqlPromosCategoricas = "SELECT p.* 
-                                FROM promociones p
+     
+        $sqlPromosCategoricas = "SELECT p.* FROM promociones p
                                 WHERE p.estadoPromo='aprobada' 
                                 AND p.categoriaCliente='Inicial'
                                 AND p.fechaHastaPromo >= '$hoy'
+                                AND p.fechaDesdePromo <= '$hoy'
                                 AND NOT EXISTS (
                                     SELECT 1 
                                     FROM uso_promociones up 
@@ -77,30 +77,32 @@ if(isset($resultadoCat)){
 
     } elseif($resultadoCat == 'Medium') {
 
+   
         $sqlCount = "SELECT COUNT(*) AS total 
-                    FROM promociones p
-                    WHERE p.estadoPromo='aprobada' 
-                    AND (p.categoriaCliente='Inicial' OR p.categoriaCliente='Medium')
-                    AND p.fechaHastaPromo >= '$hoy'
-                    AND NOT EXISTS (
-                        SELECT 1 
-                        FROM uso_promociones up 
-                        WHERE up.codPromo = p.codPromo 
-                        AND up.codCliente = '$codCliente'
-                    )
-                    $filtroCategoria";
+                     FROM promociones p
+                     WHERE p.estadoPromo='aprobada' 
+                     AND (p.categoriaCliente='Inicial' OR p.categoriaCliente='Medium')
+                     AND p.fechaHastaPromo >= '$hoy'
+                     AND p.fechaDesdePromo <= '$hoy'
+                     AND NOT EXISTS (
+                         SELECT 1 
+                         FROM uso_promociones up 
+                         WHERE up.codPromo = p.codPromo 
+                         AND up.codCliente = '$codCliente'
+                     )
+                     $filtroCategoria";
 
         $resultCount = consultaSQL($sqlCount);
         $rowCount = mysqli_fetch_assoc($resultCount);
         $total = $rowCount['total'] ?? 0;
 
         $totalPaginas = max(1, ceil($total / $porPagina));
-
-        $sqlPromosCategoricas = "SELECT p.* 
-                                FROM promociones p
+      
+        $sqlPromosCategoricas = "SELECT p.* FROM promociones p
                                 WHERE p.estadoPromo='aprobada' 
                                 AND (p.categoriaCliente='Inicial' OR p.categoriaCliente='Medium')
                                 AND p.fechaHastaPromo >= '$hoy'
+                                AND p.fechaDesdePromo <= '$hoy'
                                 AND NOT EXISTS (
                                     SELECT 1 
                                     FROM uso_promociones up 
@@ -114,10 +116,11 @@ if(isset($resultadoCat)){
     } else {
 
         $sqlCount = "SELECT COUNT(*) AS total 
-                    FROM promociones p
-                    WHERE p.estadoPromo='aprobada' 
-                    AND p.fechaHastaPromo >= '$hoy'
-                    $filtroCategoria";
+                     FROM promociones p
+                     WHERE p.estadoPromo='aprobada' 
+                     AND p.fechaHastaPromo >= '$hoy'
+                     AND p.fechaDesdePromo <= '$hoy'
+                     $filtroCategoria";
 
         $resultCount = consultaSQL($sqlCount);
         $rowCount = mysqli_fetch_assoc($resultCount);
@@ -126,28 +129,29 @@ if(isset($resultadoCat)){
         $totalPaginas = max(1, ceil($total / $porPagina));
 
         if($tipoUsuario == 'dueno de local' || $tipoUsuario == 'administrador' || !isset($_SESSION['usuario'])){
-            $sqlPromosCategoricas = "SELECT p.* 
-                                    FROM promociones p
-                                    WHERE p.estadoPromo='aprobada' 
-                                    AND p.fechaHastaPromo >= '$hoy'
-                                    $filtroCategoria
-                                    ORDER BY p.fechaDesdePromo ASC
-                                    LIMIT $porPagina OFFSET $offset";
+
+            $sqlPromosCategoricas = "SELECT p.* FROM promociones p
+                                     WHERE p.estadoPromo='aprobada' 
+                                     AND p.fechaHastaPromo >= '$hoy'
+                                     AND p.fechaDesdePromo <= '$hoy'
+                                     $filtroCategoria
+                                     ORDER BY p.fechaDesdePromo ASC
+                                     LIMIT $porPagina OFFSET $offset";
         } else {
-     
-            $sqlPromosCategoricas = "SELECT p.* 
-                                    FROM promociones p
-                                    WHERE p.estadoPromo='aprobada' 
-                                    AND p.fechaHastaPromo >= '$hoy'
-                                    AND NOT EXISTS (
-                                        SELECT 1 
-                                        FROM uso_promociones up 
-                                        WHERE up.codPromo = p.codPromo 
-                                        AND up.codCliente = '$codCliente'
-                                    )
-                                    $filtroCategoria
-                                    ORDER BY p.fechaDesdePromo ASC
-                                    LIMIT $porPagina OFFSET $offset";
+         
+            $sqlPromosCategoricas = "SELECT p.* FROM promociones p
+                                     WHERE p.estadoPromo='aprobada' 
+                                     AND p.fechaHastaPromo >= '$hoy'
+                                     AND p.fechaDesdePromo <= '$hoy'
+                                     AND NOT EXISTS (
+                                         SELECT 1 
+                                         FROM uso_promociones up 
+                                         WHERE up.codPromo = p.codPromo 
+                                         AND up.codCliente = '$codCliente'
+                                     )
+                                     $filtroCategoria
+                                     ORDER BY p.fechaDesdePromo ASC
+                                     LIMIT $porPagina OFFSET $offset";
         }
     }
 
@@ -178,7 +182,6 @@ if(isset($_POST['solicitarPromo'])){
         $_SESSION['solicitudHecha_ok'] = "La promoción ya fue solicitada anteriormente por usted.";
     }
     
-    // Redirigir para evitar reenvío de formulario
     header("Location: " . $_SERVER['PHP_SELF'] . "?categoria=$categoria&pagina=$pagina");
     exit;
 }
@@ -328,7 +331,7 @@ if(isset($_POST['solicitarPromo'])){
         } else if($_SESSION['tipoUsuario'] == 'cliente') {
             include 'navCliente.php';  
         } else if($_SESSION['tipoUsuario'] == 'dueno de local') {
-            include 'navDueño.php';  
+            include 'navDueno.php';  
         } else {
             include 'navAdmin.php';  
         }
@@ -361,7 +364,7 @@ if(isset($_POST['solicitarPromo'])){
                     <div class="collapse d-md-block" id="categoriesMenu">
                         <ul class="list-unstyled" role="menu">
                             <li role="none">
-                                <a href="descuentoTabla(SDB).php?categoria=Deporte" 
+                                <a href="descuentoTabla.php?categoria=Deporte" 
                                    role="menuitem"
                                    class="text-decoration-none d-block py-2 px-2 text-center fw-bold rounded" 
                                    style="<?php echo ($categoria == 'Deporte')? 'color: var(--color-dorado-oscuro); background-color: rgba(218, 181, 97, 0.2); font-size: 1.1rem;' : 'color: var(--color-gris);'; ?>"
@@ -370,7 +373,7 @@ if(isset($_POST['solicitarPromo'])){
                                 </a>
                             </li>          
                             <li role="none">
-                                <a href="descuentoTabla(SDB).php?categoria=Entretenimiento" 
+                                <a href="descuentoTabla.php?categoria=Entretenimiento" 
                                    role="menuitem"
                                    class="text-decoration-none d-block py-2 px-2 text-center fw-bold rounded" 
                                    style="<?php echo ($categoria == 'Entretenimiento')? 'color: var(--color-dorado-oscuro); background-color: rgba(218, 181, 97, 0.2); font-size: 1.1rem;' : 'color: var(--color-gris);'; ?>"
@@ -379,7 +382,7 @@ if(isset($_POST['solicitarPromo'])){
                                 </a>
                             </li> 
                             <li role="none">
-                                <a href="descuentoTabla(SDB).php?categoria=Gastronomia" 
+                                <a href="descuentoTabla.php?categoria=Gastronomia" 
                                    role="menuitem"
                                    class="text-decoration-none d-block py-2 px-2 text-center fw-bold rounded" 
                                    style="<?php echo ($categoria == 'Gastronomia')? 'color: var(--color-dorado-oscuro); background-color: rgba(218, 181, 97, 0.2); font-size: 1.1rem;' : 'color: var(--color-gris);'; ?>"
@@ -388,7 +391,7 @@ if(isset($_POST['solicitarPromo'])){
                                 </a>
                             </li> 
                             <li role="none">
-                                <a href="descuentoTabla(SDB).php?categoria=Indumentaria" 
+                                <a href="descuentoTabla.php?categoria=Indumentaria" 
                                    role="menuitem"
                                    class="text-decoration-none d-block py-2 px-2 text-center fw-bold rounded" 
                                    style="<?php echo ($categoria == 'Indumentaria')? 'color: var(--color-dorado-oscuro); background-color: rgba(218, 181, 97, 0.2); font-size: 1.1rem;' : 'color: var(--color-gris);'; ?>"
@@ -397,7 +400,7 @@ if(isset($_POST['solicitarPromo'])){
                                 </a>
                             </li> 
                             <li role="none">
-                                <a href="descuentoTabla(SDB).php?categoria=Tecnologia" 
+                                <a href="descuentoTabla.php?categoria=Tecnologia" 
                                    role="menuitem"
                                    class="text-decoration-none d-block py-2 px-2 text-center fw-bold rounded" 
                                    style="<?php echo ($categoria == 'Tecnologia')? 'color: var(--color-dorado-oscuro); background-color: rgba(218, 181, 97, 0.2); font-size: 1.1rem;' : 'color: var(--color-gris);'; ?>"
@@ -406,7 +409,7 @@ if(isset($_POST['solicitarPromo'])){
                                 </a>
                             </li>
                             <li role="none">
-                                <a href="descuentoTabla(SDB).php?categoria=Otros" 
+                                <a href="descuentoTabla.php?categoria=Otros" 
                                    role="menuitem"
                                    class="text-decoration-none d-block py-2 px-2 text-center fw-bold rounded" 
                                    style="<?php echo ($categoria == 'Otros')? 'color: var(--color-dorado-oscuro); background-color: rgba(218, 181, 97, 0.2); font-size: 1.1rem;' : 'color: var(--color-gris);'; ?>"
@@ -434,23 +437,19 @@ if(isset($_POST['solicitarPromo'])){
                     <!-- TABLA DE PROMOCIONES -->
                     <div class="table-responsive">
                         <table class="table table-hover table-striped align-middle text-center border" 
-                               role="table"
-                               aria-label="Tabla de promociones disponibles">
+                               role="grid"
+                               aria-readonly="true"
+                               aria-label="Tabla de promociones. Use las flechas para navegar.">
+
                             <thead style="background: linear-gradient(135deg, var(--color-dorado), var(--color-dorado-oscuro)); color: var(--color-negro);">
-                                <tr>
-                                    <th scope="col">Código</th>
-                                    <th scope="col">Descripción</th>
-                                    <th scope="col">Local</th>
-                                    <th scope="col">Caducidad</th>
-                                    <th scope="col">Días Habilitados</th>
-                                    <th scope="col">
-                                        <?php
-                                        if($tipoUsuario == 'dueño de local' || $tipoUsuario == 'administrador') {
-                                            echo '<span class="visually-hidden">Sin acciones disponibles</span>';
-                                        } else {
-                                            echo 'Acciones';
-                                        }
-                                        ?>
+                                <tr role="row">
+                                    <th scope="col" role="columnheader" id="th-codigo">Código</th>
+                                    <th scope="col" role="columnheader" id="th-desc">Descripción</th>
+                                    <th scope="col" role="columnheader" id="th-local">Local</th>
+                                    <th scope="col" role="columnheader" id="th-caducidad">Caducidad</th>
+                                    <th scope="col" role="columnheader" id="th-dias">Días Habilitados</th>
+                                    <th scope="col" role="columnheader" id="th-acciones">
+                                        <?php echo ($tipoUsuario == 'dueno de local' || $tipoUsuario == 'administrador') ? '<span class="visually-hidden">Estado</span>' : 'Acciones'; ?>
                                     </th>
                                 </tr>
                             </thead>
@@ -458,41 +457,63 @@ if(isset($_POST['solicitarPromo'])){
                             <?php
                             if(mysqli_num_rows($resultPromosTotales) != 0){
                                 while($promo = mysqli_fetch_assoc($resultPromosTotales)){
+                                    // Generamos un ID único para la fila basado en la promo
+                                    $idFila = 'row-' . $promo['codPromo'];
+
                                     $nombreLocal = htmlspecialchars(obtenNombreLocal($promo['codLocal']));
                                     $textoPromo = htmlspecialchars($promo['textoPromo']);
                                     $diasSemana = htmlspecialchars($promo['diasSemana']);
-                                    $fechaCaducidad = date('d/m/Y', strtotime($promo['fechaHastaPromo']));
+                                    $fechaRaw = $promo['fechaHastaPromo'];
+                                    $fechaCaducidad = date('d/m/Y', strtotime($fechaRaw));
+                                    $fechaTextoAccesible = date('d de F de Y', strtotime($fechaRaw)); 
                             ?>
-                                <tr>
-                                    <td data-label="Código">
-                                        <strong>PR-<?php echo $promo['codPromo']; ?></strong>
+                                <tr role="row">
+                                    <th scope="row" role="rowheader" 
+                                        id="<?php echo $idFila; ?>" 
+                                        headers="th-codigo" 
+                                        tabindex="0"
+                                        class="fw-bold">
+                                        PR-<?php echo $promo['codPromo']; ?>
+                                    </th>
+
+                                    <td role="gridcell" 
+                                        headers="th-desc <?php echo $idFila; ?>" 
+                                        tabindex="0">
+                                        <?php echo $textoPromo; ?>
                                     </td>
-                                    <td data-label="Descripción"><?php echo $textoPromo; ?></td>
-                                    <td data-label="Local"><?php echo $nombreLocal; ?></td>
-                                    <td data-label="Caducidad">
-                                        <time datetime="<?php echo $promo['fechaHastaPromo']; ?>">
+
+                                    <td role="gridcell" 
+                                        headers="th-local <?php echo $idFila; ?>" 
+                                        tabindex="0">
+                                        <?php echo $nombreLocal; ?>
+                                    </td>
+
+                                    <td role="gridcell" 
+                                        headers="th-caducidad <?php echo $idFila; ?>" 
+                                        tabindex="0">
+                                        <time datetime="<?php echo $fechaRaw; ?>" aria-label="<?php echo $fechaTextoAccesible; ?>">
                                             <?php echo $fechaCaducidad; ?>
                                         </time>
                                     </td>
-                                    <td data-label="Días Habilitados"><?php echo $diasSemana; ?></td>
-                                    <td data-label="Acciones">
+
+                                    <td role="gridcell" 
+                                        headers="th-dias <?php echo $idFila; ?>" 
+                                        tabindex="0">
+                                        <?php echo $diasSemana; ?>
+                                    </td>
+
+                                    <td role="gridcell" headers="th-acciones <?php echo $idFila; ?>">
                                         <?php
                                         if($tipoUsuario == 'dueno de local' || $tipoUsuario == 'administrador') {
-                                            echo '<span class="text-muted">—</span>';
+                                            echo '<span class="text-muted" aria-hidden="true">—</span>';
                                         } elseif(!isset($_SESSION['usuario'])) {
-                                            echo '<a href="login.php" 
-                                                     class="btn btn-sm btn-warning"
-                                                     aria-label="Iniciar sesión para solicitar la promoción ' . $promo['codPromo'] . '">
-                                                    <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i> 
-                                                    Iniciar Sesión
+                                            echo '<a href="login.php" class="btn btn-sm btn-warning" tabindex="0" aria-label="Iniciar sesión para solicitar código PR-' . $promo['codPromo'] . '">
+                                                    <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i> Iniciar
                                                   </a>';
                                         } else {
                                             echo '<form method="POST" action="" class="d-inline">
                                                     <input type="hidden" name="codPromo" value="' . $promo['codPromo'] . '">
-                                                    <button class="btn btn-sm btn-success" 
-                                                            type="submit" 
-                                                            name="solicitarPromo"
-                                                            aria-label="Solicitar promoción ' . $promo['codPromo'] . ' de ' . $nombreLocal . '">
+                                                    <button class="btn btn-sm btn-success" type="submit" name="solicitarPromo" tabindex="0" aria-label="Solicitar ' . $textoPromo . '">
                                                         <i class="bi bi-check-circle" aria-hidden="true"></i> Solicitar
                                                     </button>
                                                   </form>';
@@ -504,27 +525,17 @@ if(isset($_POST['solicitarPromo'])){
                                 }
                             } else { 
                             ?>
-                                <tr>
-                                    <td colspan="6" class="text-center py-5">
-                                        <div role="alert" aria-live="polite">
-                                            <i class="bi bi-search fs-2" aria-hidden="true"></i>
-                                            <p class="fw-bold mb-0 mt-2" style="color: var(--color-gris);">
-                                                No se encontraron promociones disponibles
-                                                <?php if(!empty($categoria)): ?>
-                                                    en la categoría <?php echo htmlspecialchars($categoria); ?>
-                                                <?php endif; ?>
-                                            </p>
-                                        </div>
+                                <tr role="row">
+                                    <td colspan="6" role="gridcell" tabindex="0" class="text-center py-5">
+                                        No hay promociones disponibles.
                                     </td>
                                 </tr>
-                            <?php
-                            }
-                            ?>
+                            <?php } ?>
                             </tbody>
                         </table>
                     </div>
 
-                    <?php if($totalPaginas > 1): ?>
+                    <?php if($totalPaginas > 0): ?>
                     <nav aria-label="Navegación de páginas de promociones" class="mt-4">
                         <ul class="pagination justify-content-center">
                         

@@ -3,7 +3,7 @@
 $hoy = date('Y-m-d');
 
 
-$porPagina = 10;
+$porPagina = 4;
 $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
 if ($pagina < 1) $pagina = 1;
 $offset = ($pagina - 1) * $porPagina;
@@ -136,8 +136,7 @@ $totalSolicitudes = mysqli_num_rows(consultaSQL("SELECT * FROM uso_promociones")
     
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<style>
+    <style>
      :root {
             --color-dorado-fondo: #eac764;
             --color-dorado-btn: #DAB561;
@@ -178,7 +177,33 @@ $totalSolicitudes = mysqli_num_rows(consultaSQL("SELECT * FROM uso_promociones")
         border-radius: 8px;
         margin-bottom: 15px;
     }
+        .page-item.disabled .page-link {
+        background-color: #e9ecef;
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+     .page-item.active .page-link {
+        background-color: var(--color-dorado-oscuro);
+        border-color: var(--color-dorado-oscuro);
+        color: #000;
+        font-weight: bold;
+    }
+
+    .page-link {
+        color: var(--color-negro);
+        font-weight: 500;
+    }
+
+    .page-link:hover,
+    .page-link:focus {
+        background-color: var(--color-dorado);
+        color: #000;
+        border-color: var(--color-dorado-oscuro);
+    }
+
 </style>
+</head>
+
 <body class="d-flex flex-column min-vh-100">
 
     <!-- CONTENEDOR PRINCIPAL -->
@@ -411,7 +436,7 @@ $totalSolicitudes = mysqli_num_rows(consultaSQL("SELECT * FROM uso_promociones")
                     <?php endwhile; ?>
 
                   
-                    <?php if($totalPaginas > 1): ?>
+                    <?php if($totalPaginas > 0): ?>
                     <nav aria-label="Paginación" class="mt-4">
                         <ul class="pagination justify-content-center">
                             <li class="page-item <?php echo ($pagina <= 1) ? 'disabled' : ''; ?>">

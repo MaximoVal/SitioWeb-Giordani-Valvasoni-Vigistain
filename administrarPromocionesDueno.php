@@ -173,7 +173,7 @@ if(isset($_POST['eliminaPromo'])){
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     Swal.fire({
-        icon: 'warning',
+        icon: 'success',
         title: 'Eliminacion de promocion exitoso',
         text: '<?php echo $_SESSION['baja_ok']; ?>',
     });

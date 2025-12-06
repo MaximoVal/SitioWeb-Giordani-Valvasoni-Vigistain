@@ -8,8 +8,6 @@ if(isset($_POST['elimina-local'])){
   $dataDueno=consultaSQL($sqlDataDueno);
   $filaDueno = mysqli_fetch_assoc($dataDueno);
   $codDueno = $filaDueno["codDueno"];
-  #$filaDueno = mysqli_fetch_assoc($dataDueno); 
-  #$codDueno = $filaDueno['codUsuario'];
   $sqlEliminaLocal="DELETE FROM locales WHERE nombreLocal='$nombre'";
   consultaSQL($sqlEliminaLocal);
   $sqlModificacion2="UPDATE usuarios SET localNoLocal='no' WHERE codUsuario='$codDueno'";
@@ -34,8 +32,7 @@ if(isset($_POST['elimina-local'])){
 
     <!-- Íconos -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-</head>
-<style>
+    <style>
      :root {
             --color-dorado-fondo: #eac764;
             --color-dorado-btn: #DAB561;
@@ -54,6 +51,8 @@ if(isset($_POST['elimina-local'])){
             color: #000000 !important;
         }   
 </style>
+</head>
+
 <body>
 
     <!-- HEADER -->
@@ -78,7 +77,7 @@ if(isset($_POST['elimina-local'])){
               
                 <div class="collapse d-md-block" id="adminMenu">
                     <div class="list-group">
-                        <a href="duenosAdmin(SDB).php" class="list-group-item list-group-item-action">Administrar dueños</a>
+                        <a href="duenosAdmin.php" class="list-group-item list-group-item-action">Administrar dueños</a>
                         <a href="administraLocalAdmin.php" class="list-group-item list-group-item-action ">Administrar locales</a>
                         <a href="administrarPromocionesAdmin.php" class="list-group-item list-group-item-action">Administrar promociones</a>
                         <a href="creaLocalAdmin.php" class="list-group-item list-group-item-action">Crear local</a>

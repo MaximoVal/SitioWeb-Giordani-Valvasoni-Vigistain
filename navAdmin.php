@@ -1,16 +1,10 @@
-<?php
-
-?>
 <head>
     <title>Panel de Administración - Paseo de la Fortuna</title>
-    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="../Estilos/estilos.css">
-    
+     <link rel="icon" type="image/png" href="../Footage/iconoPagina.png" >
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
-    
-</head>
-<style>
+    <style>
 
     :root {
         --color-dorado: #EED284; 
@@ -18,12 +12,20 @@
         --color-negro: #333333;
         --color-blanco: #FFFFFF;
         --color-enfoque: #fff4b8; 
+        --color-verde-login: #315c3d;
     }
    
         a:focus, button:focus {
             outline: 3px solid var(--color-enfoque) !important;
             outline-offset: 2px;
             border-radius: 4px;
+        }
+    a:link
+        {
+            color: black
+        }
+        a:visited{
+            color: var(--color-verde-login);
         }
 
     #boton-nav {
@@ -98,6 +100,9 @@
         flex-grow: 1;
     }
 </style>
+    
+</head>
+
 
 <body lang="es">
 
@@ -128,7 +133,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarCuenta">
                         <li>
-                            <a class="dropdown-item" href="duenosAdmin(SDB).php">Administrar Dueños</a>
+                            <a class="dropdown-item" href="duenosAdmin.php">Administrar Dueños</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="administraLocalAdmin.php">Administrar Locales</a>

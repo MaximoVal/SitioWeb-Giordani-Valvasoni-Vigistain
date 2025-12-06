@@ -1,4 +1,6 @@
-
+<?php
+    session_start();
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -16,8 +18,7 @@
 
     <!-- Íconos -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-</head>
-<style>
+    <style>
     .list-group-item.active
         {
             background-color: #DAB561 !important;
@@ -26,6 +27,8 @@
         }   
         
 </style>
+</head>
+
 <body >
     <!-- HEADER -->
     <?php include 'navAdmin.php'; ?>
@@ -47,7 +50,7 @@
                 
                 <div class="collapse d-md-block" id="adminMenu">
                     <div class="list-group">
-                        <a href="duenosAdmin(SDB).php" class="list-group-item list-group-item-action">Administrar dueños</a>
+                        <a href="duenosAdmin.php" class="list-group-item list-group-item-action">Administrar dueños</a>
                         <a href="administraLocalAdmin.php" class="list-group-item list-group-item-action ">Administrar locales</a>
                         <a href="administrarPromocionesAdmin.php" class="list-group-item list-group-item-action active">Administrar promociones</a>
                         <a href="creaLocalAdmin.php" class="list-group-item list-group-item-action">Crear local</a>

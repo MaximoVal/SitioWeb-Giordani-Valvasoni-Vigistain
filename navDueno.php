@@ -1,8 +1,5 @@
 <?php
-
-
 include_once("funciones.php");
-
 
 $nombreUsuario = $_SESSION['usuario'];
 $sql = "SELECT * FROM usuarios WHERE nombreUsuario='$nombreUsuario' AND pendiente = 'no'";
@@ -12,9 +9,9 @@ $res = consultaSQL($sql);
 if(mysqli_num_rows($res) > 0){
    ?>
     <head>
-        <link rel="stylesheet" href="../Estilos/estilos.css">
-    </head>
-    <style>
+         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <style>
         :root {
             --color-dorado-fondo: #eac764;
             --color-dorado-btn: #DAB561;
@@ -64,6 +61,8 @@ if(mysqli_num_rows($res) > 0){
                 flex-grow:1;
             }
     </style>
+    </head>
+   
 
     <nav class="navbar navbar-expand-lg navbar-custom">
             <div class="container-fluid">
@@ -85,10 +84,10 @@ if(mysqli_num_rows($res) > 0){
                             </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarCuenta">
                                     <li class="item-abajo">
-                                        <a class="dropdown-item" href="cuentaDueño.php">Administrar cuenta</a>
+                                        <a class="dropdown-item" href="cuentaDueno.php">Administrar cuenta</a>
                                     </li>
                                     <li class="item-abajo">
-                                        <a class="dropdown-item" href="administraDueno(SDB).php">Panel de Administración</a>
+                                        <a class="dropdown-item" href="administraDueno.php">Panel de Administración</a>
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li class="item-abajo">
